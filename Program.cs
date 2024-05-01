@@ -30,6 +30,7 @@ namespace VehicleSystem
                         Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
                         DateTime dropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         Schedule wantedSchedule = new Schedule { PickUpDate = pickUpDate, DropOffDate = dropOffDate };
+                        Console.WriteLine("Enter the type of vehicle:");
                         rental.ListAvailableVehicles(wantedSchedule, typeof(Vehicle));
                         break;
                     case "2":

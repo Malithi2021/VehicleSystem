@@ -14,7 +14,8 @@ namespace VehicleSystem.Services
 
         public WestminsterRentalVehicle(InMemoryData data)
         {
-            _inMemoryData = data; 
+            _inMemoryData = data;
+            vehicles = _inMemoryData.GetAllVehicles();
         }
 
 
@@ -79,11 +80,9 @@ namespace VehicleSystem.Services
             }
         }
 
-
         public void ListAvailableVehicles(Schedule wantedSchedule, Type type)
         {
             var availableVehicles = _inMemoryData.GetAvailableVehicles(wantedSchedule, type);
-
             if (availableVehicles.Count == 0)
             {
                 Console.WriteLine("No vehicles available for the specified schedule and type.");
@@ -114,6 +113,7 @@ namespace VehicleSystem.Services
                 {
                     var totalPrice = CalculateTotalPrice(vehicle, wantedSchedule);
                     var reservation = new Booking(vehicle, driver, wantedSchedule);
+                    reservation.TotalPrice = (double)totalPrice; 
                     vehicle.Reservations.Add(reservation);
                     return true;
                 }
@@ -141,6 +141,10 @@ namespace VehicleSystem.Services
                     if (reservation != null)
                     {
                         reservation.Schedule = newSchedule;
+
+                        // Update total price when the schedule changes
+                        reservation.TotalPrice = (double)CalculateTotalPrice(vehicle, newSchedule);
+
                         return true;
                     }
                     else
@@ -171,6 +175,9 @@ namespace VehicleSystem.Services
                 if (reservationToRemove != null)
                 {
                     vehicle.Reservations.Remove(reservationToRemove);
+
+                    // Optionally, update total price if needed
+
                     return true;
                 }
                 else

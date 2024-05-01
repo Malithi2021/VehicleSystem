@@ -45,9 +45,8 @@ namespace VehicleSystem.Data
             if (_bookings.Any(b => b.Vehicle.RegistrationNumber == booking.Vehicle.RegistrationNumber
                                   && b.Schedule.Overlaps(booking.Schedule)))
             {
-                return false; 
+                return false;
             }
-
             _bookings.Add(booking);
             return true;
         }
@@ -88,14 +87,12 @@ namespace VehicleSystem.Data
         public List<Report> GenerateReportData()
         {
             var reportData = new List<Report>();
-
             foreach (var vehicle in _vehicles)
             {
                 var vehicleBookings = _bookings.Where(b => b.Vehicle == vehicle).OrderBy(b => b.Schedule.PickUpDate);
                 var vehicleReportData = new Report { Vehicle = vehicle, Bookings = vehicleBookings.ToList() };
                 reportData.Add(vehicleReportData);
             }
-
             return reportData;
         }
 
