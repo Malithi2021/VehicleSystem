@@ -14,33 +14,33 @@ namespace VehicleSystem.Services
 
         public WestminsterRentalVehicle(InMemoryData data)
         {
-            _inMemoryData = new InMemoryData();
+            _inMemoryData = data; 
         }
 
-       
+
 
         public bool AddVehicle(Vehicle v)
         {
-            if (vehicles.Exists(vehicle => vehicle.RegistrationNumber == v.RegistrationNumber))
+            if (_inMemoryData.AddWestminsterRentalVehicle(v))
+            {
+                Console.WriteLine($"Vehicle with registration number {v.RegistrationNumber} added successfully.");
+                Console.WriteLine($"Number of available parking lots: {50 - _inMemoryData.GetAllVehicles().Count}");
+                return true;
+            }
+            else
             {
                 Console.WriteLine($"Vehicle with registration number {v.RegistrationNumber} already exists.");
                 return false;
             }
-
-            vehicles.Add(v);
-            Console.WriteLine($"Vehicle with registration number {v.RegistrationNumber} added successfully.");
-            Console.WriteLine($"Number of available parking lots: {50 - vehicles.Count}");
-            return true;
         }
 
         public bool DeleteVehicle(string number)
         {
-            Vehicle vehicleToRemove = vehicles.Find(v => v.RegistrationNumber == number);
-            if (vehicleToRemove != null)
+            if (_inMemoryData.GetVehicleByNumber(number) != null)
             {
-                vehicles.Remove(vehicleToRemove);
+                _inMemoryData.RemoveVehicle(_inMemoryData.GetVehicleByNumber(number));
                 Console.WriteLine($"Vehicle with registration number {number} deleted successfully.");
-                Console.WriteLine($"Number of available parking lots: {50 - vehicles.Count}");
+                Console.WriteLine($"Number of available parking lots: {50 - _inMemoryData.GetAllVehicles().Count}");
                 return true;
             }
             else
@@ -73,11 +73,12 @@ namespace VehicleSystem.Services
 
         public void ListVehicles()
         {
-            foreach (var vehicle in vehicles)
+            foreach (var vehicle in _inMemoryData.GetAllVehicles())
             {
                 Console.WriteLine($"Registration Number: {vehicle.RegistrationNumber}, Make: {vehicle.Make}, Model: {vehicle.Model}");
             }
         }
+
 
         public void ListAvailableVehicles(Schedule wantedSchedule, Type type)
         {
