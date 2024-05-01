@@ -8,6 +8,6 @@ namespace VehicleSystem.Interfaces
         public bool DeleteVehicle(string number);
         public void ListVehicles();
         public void ListOrderedVehicles();
-       // public  void GenerateReport(string fileName);
+        public  void GenerateReport(string fileName);
     }
 }

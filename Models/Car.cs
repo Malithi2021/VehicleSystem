@@ -1,10 +1,13 @@
-﻿using System.Reflection;
-
-namespace VehicleSystem.Models
+﻿namespace VehicleSystem.Models
 {
-    public class Car(string registrationNumber, string make, string model, double dailyRentalPrice, int passengerCapacity) : Vehicle(registrationNumber, make, model, dailyRentalPrice)
+    public class Car : Vehicle
     {
-        public int PassengerCapacity { get; set; } = passengerCapacity;
+        public Car(string registrationNumber, string make, string model, double dailyRentalPrice, int passengerCapacity) : base(registrationNumber, make, model, dailyRentalPrice)
+        {
+            PassengerCapacity = passengerCapacity;
+        }
+
+        public int PassengerCapacity { get; set; }
 
         public override void DisplayInfo()
         {

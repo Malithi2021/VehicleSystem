@@ -1,7 +1,4 @@
 ﻿using VehicleSystem.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace VehicleSystem.Data
 {
@@ -9,6 +6,7 @@ namespace VehicleSystem.Data
     {
         private List<Vehicle> _vehicles;
         private List<Booking> _bookings;
+      
 
         public InMemoryData()
         {
@@ -16,15 +14,14 @@ namespace VehicleSystem.Data
             _bookings = new List<Booking>();
         }
 
-       
-        public bool AddVehicle(Vehicle vehicle)
+        public bool AddWestminsterRentalVehicle(Vehicle v)
         {
-            if (_vehicles.Any(v => v.RegistrationNumber == vehicle.RegistrationNumber))
+            if (_vehicles.Any(vehicle => vehicle.RegistrationNumber == v.RegistrationNumber))
             {
                 return false; // Vehicle with the same registration number already exists
             }
 
-            _vehicles.Add(vehicle);
+            _vehicles.Add(v);
             return true;
         }
 
@@ -48,7 +45,7 @@ namespace VehicleSystem.Data
             if (_bookings.Any(b => b.Vehicle.RegistrationNumber == booking.Vehicle.RegistrationNumber
                                   && b.Schedule.Overlaps(booking.Schedule)))
             {
-                return false; // Overlapping booking for the same vehicle
+                return false; 
             }
 
             _bookings.Add(booking);
@@ -65,7 +62,7 @@ namespace VehicleSystem.Data
                 return true;
             }
 
-            return false; // Booking not found
+            return false;
         }
 
         public List<Vehicle> GetAvailableVehicles(Schedule wantedSchedule, Type type)
@@ -73,6 +70,7 @@ namespace VehicleSystem.Data
             return _vehicles.Where(v => v.GetType() == type && !_bookings.Any(b => b.Vehicle == v && b.Schedule.Overlaps(wantedSchedule))).ToList();
         }
 
+       
         public bool CheckAvailability(Vehicle vehicle, Schedule schedule)
         {
             return !_bookings.Any(b => b.Vehicle == vehicle && b.Schedule.Overlaps(schedule));
@@ -87,28 +85,33 @@ namespace VehicleSystem.Data
             }
         }
 
-      /*  public List<ReportData> GenerateReportData()
+        public List<Report> GenerateReportData()
         {
-            var reportData = new List<ReportData>();
+            var reportData = new List<Report>();
 
             foreach (var vehicle in _vehicles)
             {
                 var vehicleBookings = _bookings.Where(b => b.Vehicle == vehicle).OrderBy(b => b.Schedule.PickUpDate);
-                var vehicleReportData = new ReportData { Vehicle = vehicle, Bookings = vehicleBookings.ToList() };
+                var vehicleReportData = new Report { Vehicle = vehicle, Bookings = vehicleBookings.ToList() };
                 reportData.Add(vehicleReportData);
             }
 
             return reportData;
-        }*/
+        }
 
         public Vehicle GetVehicleByNumber(string number)
         {
             return _vehicles.FirstOrDefault(v => v.RegistrationNumber == number);
         }
 
-        internal double CalculateTotalPrice(Vehicle vehicle, Schedule wantedSchedule)
+        public decimal CalculateTotalPrice(Vehicle vehicle, Schedule schedule)
         {
-            throw new NotImplementedException();
+           
+            TimeSpan duration = schedule.DropOffDate.Date - schedule.PickUpDate.Date;
+
+        
+            decimal totalPrice = (decimal)(duration.Days * (double)vehicle.DailyRentalPrice);
+            return totalPrice;
         }
     }
 }
