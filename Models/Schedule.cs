@@ -1,15 +1,9 @@
 ﻿namespace VehicleSystem.Models
 {
-    public class Schedule
+    public class Schedule(DateTime pickUpDate, DateTime dropOffDate)
     {
-        public DateTime PickUpDate { get; set; }
-        public DateTime DropOffDate { get; set; }
-
-        public Schedule(DateTime pickUpDate, DateTime dropOffDate)
-        {
-            PickUpDate = pickUpDate;
-            DropOffDate = dropOffDate;
-        }
+        public DateTime PickUpDate { get; set; } = pickUpDate;
+        public DateTime DropOffDate { get; set; } = dropOffDate;
 
         public bool Overlaps(Schedule other)
         {

@@ -2,15 +2,9 @@
 
 namespace VehicleSystem.Models
 {
-    public class Van : Vehicle
+    public class Van(string registrationNumber, string make, string model, double dailyRentalPrice, int cargoCapacity) : Vehicle(registrationNumber,make,model,dailyRentalPrice)
     {
-        public int CargoCapacity { get; set; }
-
-        public Van(string registrationNumber,string make,string model,double dailyRentalPrice, int cargoCapacity)
-            :base(registrationNumber,make,model,dailyRentalPrice)
-        {
-            CargoCapacity = cargoCapacity;
-        }
+        public int CargoCapacity { get; set; } = cargoCapacity;
 
         public override void DisplayInfo()
         {

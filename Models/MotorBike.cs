@@ -2,15 +2,9 @@
 
 namespace VehicleSystem.Models
 {
-    public class MotorBike : Vehicle
+    public class MotorBike(string registrationNumber, string make, string model, double dailyRentalPrice, int engineDisplacement) : Vehicle(registrationNumber, make, model, dailyRentalPrice)
     {
-        public int EngineDisplacement { get; set; }  // Additional property for motorbikes
-
-        public MotorBike(string registrationNumber, string make, string model, double dailyRentalPrice, int engineDisplacement)
-            : base(registrationNumber, make, model, dailyRentalPrice)
-        {
-            EngineDisplacement = engineDisplacement;
-        }
+        public int EngineDisplacement { get; set; } = engineDisplacement;
 
         public override void DisplayInfo()
         {

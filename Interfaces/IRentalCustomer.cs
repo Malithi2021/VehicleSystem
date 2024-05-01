@@ -4,9 +4,11 @@ namespace VehicleSystem.Interfaces
 {
     public interface IRentalCustomer
     {
-        void ListAvailableVehicles(Schedule wantedSchedule, Type type);
-        bool AddReservation(string number, Schedule wantedSchedule);
-        bool ChangeReservation(string number, Schedule oldSchedule, Schedule newSchedule);
-        bool DeleteReservation(string number, Schedule schedule);
+      public void ListAvailableVehicles(Schedule wantedSchedule, Type type);
+        public bool AddReservation(string number, Schedule wantedSchedule, Driver driver);
+        public bool ChangeReservation(string number, Schedule oldSchedule, Schedule newSchedule);
+        public bool DeleteReservation(string number, Schedule schedule);
+
+        public decimal CalculateTotalPrice(Vehicle vehicle, Schedule schedule);
     }
 }

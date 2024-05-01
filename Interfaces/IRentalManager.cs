@@ -4,10 +4,10 @@ namespace VehicleSystem.Interfaces
 {
     public interface IRentalManager
     {
-        bool AddVehicle(Vehicle v);
-        bool DeleteVehicle(string number);
-        void ListVehicles();
-        void ListOrderedVehicles();
-        void GenerateReport(string fileName);
+        public bool AddVehicle(Vehicle v);
+        public bool DeleteVehicle(string number);
+        public void ListVehicles();
+        public void ListOrderedVehicles();
+       // public  void GenerateReport(string fileName);
     }
 }

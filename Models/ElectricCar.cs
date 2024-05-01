@@ -2,15 +2,9 @@
 
 namespace VehicleSystem.Models
 {
-    public class ElectricCar : Vehicle
+    public class ElectricCar(string registrationNumber, string make, string model, double dailyRentalPrice, int batteryCapacity) : Vehicle(registrationNumber, make, model, dailyRentalPrice)
     {
-        public int BatteryCapacity { get; set; }  // Additional property for electric cars
-
-        public ElectricCar(string registrationNumber, string make, string model, double dailyRentalPrice, int batteryCapacity)
-            : base(registrationNumber, make, model, dailyRentalPrice)
-        {
-            BatteryCapacity = batteryCapacity;
-        }
+        public int BatteryCapacity { get; set; } = batteryCapacity;
 
         public override void DisplayInfo()
         {

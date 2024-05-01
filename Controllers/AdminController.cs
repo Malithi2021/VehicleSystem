@@ -1,83 +1,35 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VehicleSystem.Models;
+using VehicleSystem.Services;
 
 namespace VehicleSystem.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : ControllerBase
     {
-        // GET: AdminController
-        public ActionResult Index()
+        private readonly RentalManager _rentalManager;
+
+        public AdminController(RentalManager rentalManager)
         {
-            return View();
+            _rentalManager = rentalManager;
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdminController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult AddVehicle(Vehicle vehicle)
         {
-            try
+            if (_rentalManager.AddVehicle(vehicle))
             {
-                return RedirectToAction(nameof(Index));
+                return Ok("Vehicle added successfully.");
             }
-            catch
+            else
             {
-                return View();
+                return BadRequest("Failed to add vehicle. Duplicate registration number.");
             }
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        // Implement other actions for admin functionalities
     }
+
+
 }
+

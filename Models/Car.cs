@@ -2,15 +2,9 @@
 
 namespace VehicleSystem.Models
 {
-    public class Car : Vehicle
+    public class Car(string registrationNumber, string make, string model, double dailyRentalPrice, int passengerCapacity) : Vehicle(registrationNumber, make, model, dailyRentalPrice)
     {
-        public int PassengerCapacity { get; set; }  // Additional property for cars
-
-        public Car(string registrationNumber, string make, string model, double dailyRentalPrice, int passengerCapacity)
-        : base(registrationNumber, make, model, dailyRentalPrice)
-        {
-            PassengerCapacity = passengerCapacity;
-        }
+        public int PassengerCapacity { get; set; } = passengerCapacity;
 
         public override void DisplayInfo()
         {

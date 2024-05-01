@@ -4,7 +4,7 @@ namespace VehicleSystem.Interfaces
 {
     public interface IOverlappable
     {
-        bool Overlaps(Schedule other);
+        public bool Overlaps(Schedule other);
 
     }
 }

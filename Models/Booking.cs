@@ -2,10 +2,10 @@
 {
     public class Booking
     {
-        public Vehicle Vehicle { get; private set; }
-        public Driver Driver { get; private set; }
-        public Schedule Schedule { get; private set; }
-        public double TotalPrice {  get; private set; }
+        public Vehicle Vehicle { get;  set; }
+        public Driver Driver { get;  set; }
+        public Schedule Schedule { get; set; }
+        public double TotalPrice {  get;  set; }
 
 
         public Booking (Vehicle vehicle,Driver driver,Schedule schedule)
@@ -19,7 +19,7 @@
         private void CalculateTotalPrice()
         {
             TimeSpan duration = Schedule.DropOffDate.Date - Schedule.PickUpDate.Date;
-            TotalPrice = (double)(duration.Days * Vehicle.dailyRentalPrice);
+            TotalPrice = (double)(duration.Days * Vehicle.DailyRentalPrice);
 
         }
     }
