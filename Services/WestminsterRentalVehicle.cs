@@ -65,13 +65,13 @@ namespace VehicleSystem.Services
 
         public void ListOrderedVehicles()
         {
-            vehicles.Sort((v1, v2) => string.Compare(v1.Make, v2.Make, StringComparison.Ordinal));
-            foreach (var vehicle in vehicles)
+            var orderedVehicles = _inMemoryData.GetOrderedVehicles();
+            Console.WriteLine("Ordered Vehicles:");
+            foreach (var vehicle in orderedVehicles)
             {
-                Console.WriteLine($"Registration Number: {vehicle.RegistrationNumber}, Make: {vehicle.Make}, Model: {vehicle.Model}");
+                Console.WriteLine($"Make: {vehicle.Make}, Model: {vehicle.Model}, Registration Number: {vehicle.RegistrationNumber}, Daily Rental Price: {vehicle.DailyRentalPrice}");
             }
         }
-
         public void ListVehicles()
         {
             foreach (var vehicle in _inMemoryData.GetAllVehicles())
@@ -97,6 +97,7 @@ namespace VehicleSystem.Services
         }
 
 
+
         public decimal CalculateTotalPrice(Vehicle vehicle, Schedule schedule)
         {
             TimeSpan duration = schedule.DropOffDate.Date - schedule.PickUpDate.Date;
@@ -115,6 +116,7 @@ namespace VehicleSystem.Services
                     var reservation = new Booking(vehicle, driver, wantedSchedule);
                     reservation.TotalPrice = (double)totalPrice; 
                     vehicle.Reservations.Add(reservation);
+                    Console.WriteLine("Reservation added successfully.");
                     return true;
                 }
                 else
@@ -142,9 +144,9 @@ namespace VehicleSystem.Services
                     {
                         reservation.Schedule = newSchedule;
 
-                        // Update total price when the schedule changes
-                        reservation.TotalPrice = (double)CalculateTotalPrice(vehicle, newSchedule);
 
+                        reservation.TotalPrice = (double)CalculateTotalPrice(vehicle, newSchedule);
+                        Console.WriteLine("Reservation updated successfully.");
                         return true;
                     }
                     else
@@ -176,8 +178,7 @@ namespace VehicleSystem.Services
                 {
                     vehicle.Reservations.Remove(reservationToRemove);
 
-                    // Optionally, update total price if needed
-
+                    Console.WriteLine("Reservation deleted successfully.");
                     return true;
                 }
                 else

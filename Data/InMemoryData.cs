@@ -18,7 +18,7 @@ namespace VehicleSystem.Data
         {
             if (_vehicles.Any(vehicle => vehicle.RegistrationNumber == v.RegistrationNumber))
             {
-                return false; // Vehicle with the same registration number already exists
+                return false; 
             }
 
             _vehicles.Add(v);
@@ -66,10 +66,11 @@ namespace VehicleSystem.Data
 
         public List<Vehicle> GetAvailableVehicles(Schedule wantedSchedule, Type type)
         {
-            return _vehicles.Where(v => v.GetType() == type && !_bookings.Any(b => b.Vehicle == v && b.Schedule.Overlaps(wantedSchedule))).ToList();
+            // Assuming each vehicle type is a direct subclass of Vehicle
+            return _vehicles.Where(v => v.GetType().IsSubclassOf(type) && !_bookings.Any(b => b.Vehicle == v && b.Schedule.Overlaps(wantedSchedule))).ToList();
         }
 
-       
+
         public bool CheckAvailability(Vehicle vehicle, Schedule schedule)
         {
             return !_bookings.Any(b => b.Vehicle == vehicle && b.Schedule.Overlaps(schedule));

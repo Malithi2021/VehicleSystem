@@ -1,13 +1,30 @@
-﻿namespace VehicleSystem.Models
-{
-    public abstract class Vehicle(string? registrationNumber, string? make, string? model, double? dailyRentalPrice)
-    {
-        public string? RegistrationNumber { get; set; } = registrationNumber;
-        public string? Make { get; set; } = make;
-        public string? Model { get; set; } = model;
-        public double? DailyRentalPrice { get; set; } = dailyRentalPrice;
+﻿using System;
+using System.Collections.Generic;
 
+namespace VehicleSystem.Models
+{
+    public abstract class Vehicle : IComparable<Vehicle>
+    {
+        public string? RegistrationNumber { get; set; }
+        public string? Make { get; set; }
+        public string? Model { get; set; }
+        public double? DailyRentalPrice { get; set; }
         public List<Booking> Reservations { get; set; } = new List<Booking>();
+
+       
+        public Vehicle(string registrationNumber, string make, string model, double dailyRentalPrice)
+        {
+            RegistrationNumber = registrationNumber;
+            Make = make;
+            Model = model;
+            DailyRentalPrice = dailyRentalPrice;
+        }
+
+        public int CompareTo(Vehicle other)
+        {
+            if (other == null) return 1;
+            return string.Compare(this.Make, other.Make, StringComparison.OrdinalIgnoreCase);
+        }
 
         public abstract void DisplayInfo();
 
@@ -17,11 +34,10 @@
             {
                 if (wantedSchedule.Overlaps(reservation.Schedule))
                 {
-                    return false; 
+                    return false;
                 }
             }
-
-            return true; 
+            return true;
         }
     }
 }

@@ -25,38 +25,78 @@ namespace VehicleSystem
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("Enter the pick-up date (DD/MM/YYYY):");
-                        DateTime pickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
-                        DateTime dropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime pickUpDate = DateTime.MinValue; 
+                        DateTime dropOffDate = DateTime.MinValue; 
+                        bool validDates = false;
+                        while (!validDates)
+                        {
+                            Console.WriteLine("Enter the pick-up date (DD/MM/YYYY):");
+                            string pickUpDateString = Console.ReadLine();
+                            Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
+                            string dropOffDateString = Console.ReadLine();
+                            try
+                            {
+                                pickUpDate = DateTime.ParseExact(pickUpDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                dropOffDate = DateTime.ParseExact(dropOffDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                validDates = true;
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid date format. Please enter the date in the format DD/MM/YYYY.");
+                            }
+                        }
                         Schedule wantedSchedule = new Schedule { PickUpDate = pickUpDate, DropOffDate = dropOffDate };
-                        Console.WriteLine("Enter the type of vehicle:");
                         rental.ListAvailableVehicles(wantedSchedule, typeof(Vehicle));
                         break;
                     case "2":
-                        Console.WriteLine("Enter the registration number of the vehicle:");
-                        string regNumber = Console.ReadLine() ?? "";
-                        Console.WriteLine("Enter the pick-up date (DD/MM/YYYY):");
-                        DateTime newPickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
-                        DateTime newDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        Schedule newSchedule = new Schedule { PickUpDate = newPickUpDate, DropOffDate = newDropOffDate };
-                        Console.WriteLine("Enter driver's first name:");
-                        string firstName = Console.ReadLine() ?? "";
-                        Console.WriteLine("Enter driver's last name:");
-                        string lastName = Console.ReadLine() ?? "";
-                        Console.WriteLine("Enter driver's date of birth (DD/MM/YYYY):");
-                        DateTime dob = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        Console.WriteLine("Enter driver's license number:");
-                        string licenseNumber = Console.ReadLine() ?? "";
-                        Driver driver = new Driver { FirstName = firstName, LastName = lastName, DateOfBirth = dob, LicenseNumber = licenseNumber };
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.WriteLine("Enter the registration number of the vehicle:");
+                                string regNumber = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter the pick-up date (DD/MM/YYYY):");
+                                DateTime newPickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
+                                DateTime newDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                Schedule newSchedule = new Schedule { PickUpDate = newPickUpDate, DropOffDate = newDropOffDate };
+                                Console.WriteLine("Enter driver's first name:");
+                                string firstName = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter driver's last name:");
+                                string lastName = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter driver's date of birth (DD/MM/YYYY):");
+                                DateTime dob = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                Console.WriteLine("Enter driver's license number:");
+                                string licenseNumber = Console.ReadLine() ?? "";
+                                Driver driver = new Driver { FirstName = firstName, LastName = lastName, DateOfBirth = dob, LicenseNumber = licenseNumber };
 
-                        // Assuming you have the vehicle type available here
-                        Console.WriteLine("Enter the type of vehicle (Car, ElectricCar, MotorBike, or Van): ");
-                        string vehicleType = Console.ReadLine() ?? "";
-                        Type type = Type.GetType("VehicleSystem.Models." + vehicleType, throwOnError: true);
+                                Console.WriteLine("Enter the type of vehicle (Car, ElectricCar, MotorBike, or Van): ");
+                                string vehicleTypeInput = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Console.ReadLine()?.ToLowerInvariant() ?? "");
 
-                        rental.AddReservation(regNumber, newSchedule, type, driver);
+                                Dictionary<string, string> typeMappings = new Dictionary<string, string>
+                                {
+                                        { "Car", "Car" },
+                                        { "Van", "Van" },
+                                        { "Motorbike", "MotorBike" },
+                                        { "Electriccar", "ElectricCar" }
+                                };
+
+                                if (typeMappings.TryGetValue(vehicleTypeInput, out string vehicleTypeName))
+                                {
+                                    Type type = Type.GetType("VehicleSystem.Models." + vehicleTypeName, throwOnError: true);
+                                    rental.AddReservation(regNumber, newSchedule, type, driver);
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid vehicle type. Please try again.");
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid input format. Please enter valid data.");
+                            }
+                        }
                         break;
 
                     case "3":
@@ -130,7 +170,7 @@ namespace VehicleSystem
                         Console.Write("Year: ");
                         int year = int.Parse(Console.ReadLine() ?? "") ;
                         Console.Write("Color: ");
-                        string color = Console.ReadLine();
+                        string color = Console.ReadLine() ?? "";
                         Console.Write("Price per Day: ");
                         double pricePerDay = double.Parse(Console.ReadLine() ?? "");
 
