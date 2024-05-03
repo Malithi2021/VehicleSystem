@@ -34,10 +34,11 @@ namespace VehicleSystem.Services
         // Method to delete a vehicle
         public bool DeleteVehicle(string number)
         {
-            if (_inMemoryData.GetVehicleByNumber(number) != null)
+            var vehicleToDelete = _inMemoryData.GetVehicleByNumber(number);
+            if (vehicleToDelete != null)
             {
-                _inMemoryData.RemoveVehicle(_inMemoryData.GetVehicleByNumber(number));
-                Console.WriteLine($"Vehicle with registration number {number} deleted successfully.");
+                _inMemoryData.RemoveVehicle(vehicleToDelete);
+                Console.WriteLine($"Vehicle with registration number {vehicleToDelete.RegistrationNumber}, Make: {vehicleToDelete.Make}, Model: {vehicleToDelete.Model} deleted successfully.");
                 Console.WriteLine($"Number of available parking lots: {50 - _inMemoryData.GetAllVehicles().Count}");
                 return true;
             }
@@ -47,6 +48,7 @@ namespace VehicleSystem.Services
                 return false;
             }
         }
+
 
         // Method to generate a report of all vehicles and their bookings
         public void GenerateReport(string fileName)
@@ -93,9 +95,23 @@ namespace VehicleSystem.Services
         {
             foreach (var vehicle in _inMemoryData.GetAllVehicles())
             {
-                Console.WriteLine($"Registration Number: {vehicle.RegistrationNumber}, Make: {vehicle.Make}, Model: {vehicle.Model}");
+                Console.WriteLine($"Registration Number: {vehicle.RegistrationNumber}, Type: {vehicle.GetType().Name}, Model: {vehicle.Model}");
+
+                if (vehicle.Reservations.Count > 0)
+                {
+                    Console.WriteLine("Reservation Schedules:");
+                    foreach (var booking in vehicle.Reservations)
+                    {
+                        Console.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.LastName}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No reservations for this vehicle.");
+                }
             }
         }
+
 
         // Method to list available vehicles for a specified schedule and type
         public void ListAvailableVehicles(Schedule wantedSchedule, Type type)
