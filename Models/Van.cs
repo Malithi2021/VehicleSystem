@@ -9,7 +9,9 @@ namespace VehicleSystem.Models
         public override void DisplayInfo()
         {
             Console.WriteLine($"Vehicle Type: Van");
-          
+            Console.WriteLine($"Cargo capacity:{CargoCapacity}");
+            Console.WriteLine();
+
         }
     }
 }

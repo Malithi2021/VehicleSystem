@@ -43,13 +43,14 @@ namespace VehicleSystem.Data
         public bool AddBooking(Booking booking)
         {
             if (_bookings.Any(b => b.Vehicle.RegistrationNumber == booking.Vehicle.RegistrationNumber
-                                  && b.Schedule.Overlaps(booking.Schedule)))
+                                      && b.Schedule.Overlaps(booking.Schedule)))
             {
                 return false;
             }
             _bookings.Add(booking);
             return true;
         }
+
 
         public bool RemoveBooking(Vehicle vehicle, Schedule schedule)
         {

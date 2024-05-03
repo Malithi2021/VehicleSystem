@@ -53,15 +53,35 @@ namespace VehicleSystem.Services
 
         public void GenerateReport(string fileName)
         {
-            using (StreamWriter writer = new StreamWriter(fileName))
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
+            string filePath = Path.Combine(directoryPath, fileName);
+
+            // Ensure the Reports folder exists in the project directory
+            Directory.CreateDirectory(directoryPath);
+
+            using (StreamWriter writer = new StreamWriter(filePath))
             {
                 foreach (var vehicle in vehicles)
                 {
-                    writer.WriteLine($"Registration Number: {vehicle.RegistrationNumber}, Make: {vehicle.Make}, Model: {vehicle.Model}");
+                    // Sort the bookings for the current vehicle by start date in ascending order
+                    var sortedBookings = vehicle.Reservations.OrderBy(b => b.Schedule.PickUpDate);
+
+                    writer.WriteLine($"Vehicle Information - Registration Number: {vehicle.RegistrationNumber}, Make: {vehicle.Make}, Model: {vehicle.Model}");
+
+                    writer.WriteLine("Bookings:");
+                    foreach (var booking in sortedBookings)
+                    {
+                        writer.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.LastName}");
+                    }
+                    writer.WriteLine();
                 }
             }
             Console.WriteLine($"Report generated successfully and saved as {fileName}");
         }
+
+
+
+
 
         public void ListOrderedVehicles()
         {
@@ -100,8 +120,8 @@ namespace VehicleSystem.Services
 
         public decimal CalculateTotalPrice(Vehicle vehicle, Schedule schedule)
         {
-            TimeSpan duration = schedule.DropOffDate.Date - schedule.PickUpDate.Date;
-            decimal totalPrice = (decimal)(duration.Days * (double)vehicle.DailyRentalPrice);
+            TimeSpan duration = schedule.DropOffDate - schedule.PickUpDate; 
+            decimal totalPrice = (decimal)(duration.TotalDays * (double)vehicle.DailyRentalPrice); 
             return totalPrice;
         }
 
@@ -112,11 +132,17 @@ namespace VehicleSystem.Services
             {
                 if (vehicle.IsAvailable(wantedSchedule))
                 {
+                    // Calculate the total price before creating the reservation
                     var totalPrice = CalculateTotalPrice(vehicle, wantedSchedule);
                     var reservation = new Booking(vehicle, driver, wantedSchedule);
-                    reservation.TotalPrice = (double)totalPrice; 
+                    reservation.TotalPrice = (double)totalPrice; // Assign the calculated total price
                     vehicle.Reservations.Add(reservation);
+                    // Update the vehicles list after adding the reservation
+                    _inMemoryData.AddBooking(reservation);
                     Console.WriteLine("Reservation added successfully.");
+                    Console.WriteLine($"Total Price is: {reservation.TotalPrice}");
+                    Console.WriteLine($"Pick-up Date: {wantedSchedule.PickUpDate}, Drop-off Date: {wantedSchedule.DropOffDate}");
+
                     return true;
                 }
                 else
@@ -137,27 +163,27 @@ namespace VehicleSystem.Services
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number);
             if (vehicle != null)
             {
-                if (vehicle.IsAvailable(newSchedule))
+                var reservation = vehicle.Reservations.Find(r => r.Schedule.PickUpDate == oldSchedule.PickUpDate && r.Schedule.DropOffDate == oldSchedule.DropOffDate);
+                if (reservation != null)
                 {
-                    var reservation = vehicle.Reservations.Find(r => r.Schedule == oldSchedule);
-                    if (reservation != null)
+                    if (vehicle.IsAvailable(newSchedule))
                     {
                         reservation.Schedule = newSchedule;
-
-
                         reservation.TotalPrice = (double)CalculateTotalPrice(vehicle, newSchedule);
                         Console.WriteLine("Reservation updated successfully.");
+                        Console.WriteLine($"Updated pick-up date: {newSchedule.PickUpDate}");
+                        Console.WriteLine($"Updated drop-off date: {newSchedule.DropOffDate}");
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("No reservation found for the specified schedule.");
+                        Console.WriteLine("The new schedule overlaps with existing bookings.");
                         return false;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("The new schedule overlaps with existing bookings.");
+                    Console.WriteLine("No reservation found for the specified schedule.");
                     return false;
                 }
             }
@@ -168,11 +194,13 @@ namespace VehicleSystem.Services
             }
         }
 
+
         public bool DeleteReservation(string number, Schedule schedule)
         {
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number);
             if (vehicle != null)
             {
+
                 var reservationToRemove = vehicle.Reservations.Find(r => r.Schedule == schedule);
                 if (reservationToRemove != null)
                 {

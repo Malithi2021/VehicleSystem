@@ -25,8 +25,8 @@ namespace VehicleSystem
                 switch (choice)
                 {
                     case "1":
-                        DateTime pickUpDate = DateTime.MinValue; 
-                        DateTime dropOffDate = DateTime.MinValue; 
+                        DateTime pickUpDate = DateTime.MinValue;
+                        DateTime dropOffDate = DateTime.MinValue;
                         bool validDates = false;
                         while (!validDates)
                         {
@@ -38,6 +38,11 @@ namespace VehicleSystem
                             {
                                 pickUpDate = DateTime.ParseExact(pickUpDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                                 dropOffDate = DateTime.ParseExact(dropOffDateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                if (dropOffDate < pickUpDate)
+                                {
+                                    Console.WriteLine("Invalid dates. Drop-off date cannot be earlier than the pick-up date.");
+                                    continue;
+                                }
                                 validDates = true;
                             }
                             catch (FormatException)
@@ -59,6 +64,12 @@ namespace VehicleSystem
                                 DateTime newPickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                                 Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
                                 DateTime newDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                
+                                if (newDropOffDate < newPickUpDate)
+                                {
+                                    Console.WriteLine("Invalid dates. Drop-off date cannot be earlier than the pick-up date.");
+                                    continue;
+                                }
                                 Schedule newSchedule = new Schedule { PickUpDate = newPickUpDate, DropOffDate = newDropOffDate };
                                 Console.WriteLine("Enter driver's first name:");
                                 string firstName = Console.ReadLine() ?? "";
@@ -106,11 +117,21 @@ namespace VehicleSystem
                         DateTime oldPickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         Console.WriteLine("Enter the existing drop-off date (DD/MM/YYYY):");
                         DateTime oldDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        if (oldDropOffDate < oldPickUpDate)
+                        {
+                            Console.WriteLine("Invalid dates. Drop-off date cannot be earlier than the pick-up date.");
+                            break;
+                        }
                         Schedule existingSchedule = new Schedule { PickUpDate = oldPickUpDate, DropOffDate = oldDropOffDate };
                         Console.WriteLine("Enter the new pick-up date (DD/MM/YYYY):");
                         DateTime updatedPickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         Console.WriteLine("Enter the new drop-off date (DD/MM/YYYY):");
                         DateTime updatedDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        if (updatedDropOffDate < updatedPickUpDate)
+                        {
+                            Console.WriteLine("Invalid dates. Drop-off date cannot be earlier than the pick-up date.");
+                            break;
+                        }
                         Schedule updatedSchedule = new Schedule { PickUpDate = updatedPickUpDate, DropOffDate = updatedDropOffDate };
                         rental.ChangeReservation(vehicleNumber, existingSchedule, updatedSchedule);
                         break;
@@ -121,6 +142,11 @@ namespace VehicleSystem
                         DateTime deletePickUpDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         Console.WriteLine("Enter the drop-off date (DD/MM/YYYY):");
                         DateTime deleteDropOffDate = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        if (deleteDropOffDate < deletePickUpDate)
+                        {
+                            Console.WriteLine("Invalid dates. Drop-off date cannot be earlier than the pick-up date.");
+                            break;
+                        }
                         Schedule deleteSchedule = new Schedule { PickUpDate = deletePickUpDate, DropOffDate = deleteDropOffDate };
                         rental.DeleteReservation(deleteVehicleNumber, deleteSchedule);
                         break;

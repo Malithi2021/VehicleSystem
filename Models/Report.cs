@@ -5,7 +5,6 @@
         public Vehicle Vehicle { get; set; }
         public List<Booking> Bookings { get; set; }
 
-       
         public Report()
         {
             Bookings = new List<Booking>();
