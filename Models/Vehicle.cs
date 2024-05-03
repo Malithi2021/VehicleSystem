@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace VehicleSystem.Models
+﻿namespace VehicleSystem.Models
 {
     public abstract class Vehicle : IComparable<Vehicle>
     {
@@ -11,7 +8,6 @@ namespace VehicleSystem.Models
         public double? DailyRentalPrice { get; set; }
         public List<Booking> Reservations { get; set; } = new List<Booking>();
 
-       
         public Vehicle(string registrationNumber, string make, string model, double dailyRentalPrice)
         {
             RegistrationNumber = registrationNumber;

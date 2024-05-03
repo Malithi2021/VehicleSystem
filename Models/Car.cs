@@ -6,7 +6,6 @@
         {
             PassengerCapacity = passengerCapacity;
         }
-
         public int PassengerCapacity { get; set; }
 
         public override void DisplayInfo()

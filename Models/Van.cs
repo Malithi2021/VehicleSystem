@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace VehicleSystem.Models
+﻿namespace VehicleSystem.Models
 {
     public class Van(string registrationNumber, string make, string model, double dailyRentalPrice, int cargoCapacity) : Vehicle(registrationNumber,make,model,dailyRentalPrice)
     {

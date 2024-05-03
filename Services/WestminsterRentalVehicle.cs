@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using VehicleSystem.Data;
+﻿using VehicleSystem.Data;
 using VehicleSystem.Interfaces;
 using VehicleSystem.Models;
 
@@ -10,7 +7,7 @@ namespace VehicleSystem.Services
     public class WestminsterRentalVehicle : IRentalManager, IRentalCustomer
     {
         private List<Vehicle> vehicles = new List<Vehicle>();
-        private InMemoryData _inMemoryData;
+        private InMemoryData _inMemoryData;  // Instance of InMemoryData class to interact with data
 
         public WestminsterRentalVehicle(InMemoryData data)
         {
@@ -18,8 +15,7 @@ namespace VehicleSystem.Services
             vehicles = _inMemoryData.GetAllVehicles();
         }
 
-
-
+        // Method to add a vehicle
         public bool AddVehicle(Vehicle v)
         {
             if (_inMemoryData.AddWestminsterRentalVehicle(v))
@@ -35,6 +31,7 @@ namespace VehicleSystem.Services
             }
         }
 
+        // Method to delete a vehicle
         public bool DeleteVehicle(string number)
         {
             if (_inMemoryData.GetVehicleByNumber(number) != null)
@@ -51,6 +48,7 @@ namespace VehicleSystem.Services
             }
         }
 
+        // Method to generate a report of all vehicles and their bookings
         public void GenerateReport(string fileName)
         {
             string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
@@ -79,10 +77,7 @@ namespace VehicleSystem.Services
             Console.WriteLine($"Report generated successfully and saved as {fileName}");
         }
 
-
-
-
-
+        // Method to list vehicles ordered by make
         public void ListOrderedVehicles()
         {
             var orderedVehicles = _inMemoryData.GetOrderedVehicles();
@@ -92,6 +87,8 @@ namespace VehicleSystem.Services
                 Console.WriteLine($"Make: {vehicle.Make}, Model: {vehicle.Model}, Registration Number: {vehicle.RegistrationNumber}, Daily Rental Price: {vehicle.DailyRentalPrice}");
             }
         }
+
+        // Method to list all vehicles
         public void ListVehicles()
         {
             foreach (var vehicle in _inMemoryData.GetAllVehicles())
@@ -100,6 +97,7 @@ namespace VehicleSystem.Services
             }
         }
 
+        // Method to list available vehicles for a specified schedule and type
         public void ListAvailableVehicles(Schedule wantedSchedule, Type type)
         {
             var availableVehicles = _inMemoryData.GetAvailableVehicles(wantedSchedule, type);
@@ -116,8 +114,7 @@ namespace VehicleSystem.Services
             }
         }
 
-
-
+        // Method to calculate the total price for a given vehicle and schedule
         public decimal CalculateTotalPrice(Vehicle vehicle, Schedule schedule)
         {
             TimeSpan duration = schedule.DropOffDate - schedule.PickUpDate; 
@@ -125,6 +122,7 @@ namespace VehicleSystem.Services
             return totalPrice;
         }
 
+        // Method to add a reservation
         public bool AddReservation(string number, Schedule wantedSchedule, Type type, Driver driver)
         {
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number && v.GetType() == type);
@@ -132,17 +130,14 @@ namespace VehicleSystem.Services
             {
                 if (vehicle.IsAvailable(wantedSchedule))
                 {
-                    // Calculate the total price before creating the reservation
                     var totalPrice = CalculateTotalPrice(vehicle, wantedSchedule);
                     var reservation = new Booking(vehicle, driver, wantedSchedule);
-                    reservation.TotalPrice = (double)totalPrice; // Assign the calculated total price
+                    reservation.TotalPrice = (double)totalPrice; 
                     vehicle.Reservations.Add(reservation);
-                    // Update the vehicles list after adding the reservation
                     _inMemoryData.AddBooking(reservation);
                     Console.WriteLine("Reservation added successfully.");
                     Console.WriteLine($"Total Price is: {reservation.TotalPrice}");
                     Console.WriteLine($"Pick-up Date: {wantedSchedule.PickUpDate}, Drop-off Date: {wantedSchedule.DropOffDate}");
-
                     return true;
                 }
                 else
@@ -158,6 +153,7 @@ namespace VehicleSystem.Services
             }
         }
 
+        // Method to change a reservation
         public bool ChangeReservation(string number, Schedule oldSchedule, Schedule newSchedule)
         {
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number);
@@ -194,7 +190,7 @@ namespace VehicleSystem.Services
             }
         }
 
-
+        // Method to delete a reservation
         public bool DeleteReservation(string number, Schedule schedule)
         {
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number);
@@ -219,7 +215,5 @@ namespace VehicleSystem.Services
                 return false;
             }
         }
-
-
     }
 }

@@ -7,6 +7,4 @@
         public DateTime DateOfBirth { get; set; }
         public string? LicenseNumber { get; set; }
     }
-
-
 }

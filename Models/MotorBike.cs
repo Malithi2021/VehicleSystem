@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace VehicleSystem.Models
+﻿namespace VehicleSystem.Models
 {
     public class MotorBike(string registrationNumber, string make, string model, double dailyRentalPrice, int engineDisplacement) : Vehicle(registrationNumber, make, model, dailyRentalPrice)
     {
