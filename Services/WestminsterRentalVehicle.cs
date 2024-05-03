@@ -200,12 +200,10 @@ namespace VehicleSystem.Services
             var vehicle = vehicles.Find(v => v.RegistrationNumber == number);
             if (vehicle != null)
             {
-
-                var reservationToRemove = vehicle.Reservations.Find(r => r.Schedule == schedule);
+                var reservationToRemove = vehicle.Reservations.Find(r => r.Schedule.PickUpDate == schedule.PickUpDate && r.Schedule.DropOffDate == schedule.DropOffDate);
                 if (reservationToRemove != null)
                 {
                     vehicle.Reservations.Remove(reservationToRemove);
-
                     Console.WriteLine("Reservation deleted successfully.");
                     return true;
                 }
@@ -221,5 +219,7 @@ namespace VehicleSystem.Services
                 return false;
             }
         }
+
+
     }
 }
