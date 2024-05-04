@@ -73,13 +73,13 @@ namespace VehicleSystem
                                 Schedule newSchedule = new Schedule { PickUpDate = newPickUpDate, DropOffDate = newDropOffDate };
                                 Console.WriteLine("Enter driver's first name:");
                                 string firstName = Console.ReadLine() ?? "";
-                                Console.WriteLine("Enter driver's last name:");
-                                string lastName = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter driver's surname:");
+                                string surName = Console.ReadLine() ?? "";
                                 Console.WriteLine("Enter driver's date of birth (DD/MM/YYYY):");
                                 DateTime dob = DateTime.ParseExact(Console.ReadLine() ?? "", "dd/MM/yyyy", CultureInfo.InvariantCulture);
                                 Console.WriteLine("Enter driver's license number:");
                                 string licenseNumber = Console.ReadLine() ?? "";
-                                Driver driver = new Driver { FirstName = firstName, LastName = lastName, DateOfBirth = dob, LicenseNumber = licenseNumber };
+                                Driver driver = new Driver { FirstName = firstName, SurName = surName, DateOfBirth = dob, LicenseNumber = licenseNumber };
 
                                 Console.WriteLine("Enter the type of vehicle (Car, ElectricCar, MotorBike, or Van): ");
                                 string vehicleTypeInput = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Console.ReadLine()?.ToLowerInvariant() ?? "");

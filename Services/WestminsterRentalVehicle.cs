@@ -71,7 +71,7 @@ namespace VehicleSystem.Services
                     writer.WriteLine("Bookings:");
                     foreach (var booking in sortedBookings)
                     {
-                        writer.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.LastName}");
+                        writer.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.SurName}");
                     }
                     writer.WriteLine();
                 }
@@ -102,7 +102,7 @@ namespace VehicleSystem.Services
                     Console.WriteLine("Reservation Schedules:");
                     foreach (var booking in vehicle.Reservations)
                     {
-                        Console.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.LastName}");
+                        Console.WriteLine($"  - Start Date: {booking.Schedule.PickUpDate}, End Date: {booking.Schedule.DropOffDate}, Driver: {booking.Driver.FirstName} {booking.Driver.SurName}");
                     }
                 }
                 else
